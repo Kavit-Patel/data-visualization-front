@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import { useRegister } from "../api/api";
-import "./Register.css"; // Include your CSS file here
+import "./Register.css";
 
 const Register = () => {
+  const urlParams = new URLSearchParams(window.location.search);
   const { mutateAsync: register, isLoading } = useRegister();
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
@@ -29,7 +29,7 @@ const Register = () => {
       { email: userDetails.email, password: userDetails.password },
       {
         onSuccess: () => {
-          navigate("/");
+          navigate(`/?${urlParams}`);
         },
       }
     );
@@ -167,7 +167,7 @@ const Register = () => {
 
             <p className="login-link">
               Already have an account ?{" "}
-              <Link className="link" to="/login">
+              <Link className="link" to={`/login/?${urlParams}`}>
                 Login!
               </Link>
             </p>

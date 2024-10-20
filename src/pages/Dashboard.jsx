@@ -22,8 +22,8 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [ageOptions, setAgeOptions] = useState([]);
   const [genderOptions, setGenderOptions] = useState([]);
-  const [selectedFeature, setSelectedFeature] = useState(null); // For tracking selected bar
-  const [lineChartData, setLineChartData] = useState([]); // Data for LineChart
+  const [selectedFeature, setSelectedFeature] = useState(null);
+  const [lineChartData, setLineChartData] = useState([]);
 
   const {
     filteredData,
@@ -37,16 +37,11 @@ const Dashboard = () => {
     setGenderFilter,
   } = useFilterData(data);
 
-  // Fetch data from API on load
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://nest-data-visualization-backend-6wwt.onrender.com/sheet/1l7GstWHc69HPV0irSdvoMIyHgtufUPKsbtCiNw7IKR0/Sheet3"
-        );
+        const response = await fetch(`${import.meta.env.VITE_GSHEET_API}`);
         const result = await response.json();
-        console.log("result ", result);
-        // Process and store unique age and gender options
         const [, ...otherRows] = result;
         const ages = [...new Set(otherRows.map((row) => row[1]))];
         const genders = [...new Set(otherRows.map((row) => row[2]))];
@@ -95,9 +90,7 @@ const Dashboard = () => {
     },
   ];
 
-  // Event handler for bar click
   const handleBarClick = (handleData) => {
-    console.log(handleData, data);
     setSelectedFeature(handleData.feature);
     const [header] = data;
     const featureRow = header.findIndex((feat) => feat === handleData.feature);
@@ -108,11 +101,9 @@ const Dashboard = () => {
     setLineChartData(lineData);
   };
 
-  // 1. Update URL whenever filters change
   const updateURL = () => {
     const url = new URL(window.location.href);
 
-    // Set URL search params
     if (startDate) {
       url.searchParams.set("startDate", startDate.toISOString());
     } else {
@@ -128,26 +119,21 @@ const Dashboard = () => {
     url.searchParams.set("ageFilter", ageFilter);
     url.searchParams.set("genderFilter", genderFilter);
 
-    // Push the updated URL to the browser history
     window.history.pushState({}, "", url.toString());
   };
 
-  // Trigger the URL update whenever filters change
   useEffect(() => {
     updateURL();
   }, [startDate, endDate, ageFilter, genderFilter]);
 
-  // 2. Extract the filters from the URL on page load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Get filters from the URL
     const startDateParam = urlParams.get("startDate");
     const endDateParam = urlParams.get("endDate");
     const ageFilterParam = urlParams.get("ageFilter");
     const genderFilterParam = urlParams.get("genderFilter");
 
-    // Restore filters from the URL if they exist
     if (startDateParam) {
       setStartDate(new Date(startDateParam));
     }
@@ -163,19 +149,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="p-6 w-full bg-red-300" style={{ width: "90%" }}>
-      <h1
-        className="text-2xl mb-4 text-red-500"
-        style={{ width: "100%", textAlign: "center" }}
-      >
+    <div style={{ width: "90%" }}>
+      <h1 className="" style={{ width: "100%", textAlign: "center" }}>
         Feature Time Spent Analysis
       </h1>
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-6 filter-row">
+      <div className="filter-row">
         <div>
-          <label className="block mb-1 filter-item">Select Date Range</label>
-          <div className="flex gap-2 date-picker-wrapper">
+          <label className="filter-item">Select Date Range</label>
+          <div className=" date-picker-wrapper">
             <DatePicker
               selected={startDate}
               dateFormat="dd/MM/yyyy"
@@ -191,7 +173,7 @@ const Dashboard = () => {
               startDate={startDate}
               endDate={endDate}
               placeholderText="Start Date"
-              className="border p-2"
+              className=""
             />
             <DatePicker
               selected={endDate}
@@ -207,13 +189,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Age Filter */}
         <div className="filter-item">
           <label className="block mb-1">Select Age Group</label>
           <select
             value={ageFilter}
             onChange={(e) => setAgeFilter(e.target.value)}
-            className="border p-2"
+            className=""
           >
             <option value="all">All Ages</option>
             {ageOptions.map((age, idx) => (
@@ -224,13 +205,12 @@ const Dashboard = () => {
           </select>
         </div>
 
-        {/* Gender Filter */}
         <div className="filter-item">
-          <label className="block mb-1">Select Gender</label>
+          <label className="-">Select Gender</label>
           <select
             value={genderFilter}
             onChange={(e) => setGenderFilter(e.target.value)}
-            className="border p-2"
+            className="-"
           >
             <option value="all">All Genders</option>
             {genderOptions.map((gender, idx) => (
@@ -242,7 +222,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Bar Chart */}
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={aggregatedData} layout="vertical">
           <XAxis type="number" />
@@ -260,10 +239,11 @@ const Dashboard = () => {
         </BarChart>
       </ResponsiveContainer>
 
-      {/* Line Chart */}
       {selectedFeature && (
-        <div className="mt-6">
-          <h2 className="text-xl mb-4">Time Trend for {selectedFeature}</h2>
+        <div className="">
+          <h2 className="" style={{ width: "100%", textAlign: "center" }}>
+            Time Trend for {selectedFeature}
+          </h2>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={lineChartData}>
               <CartesianGrid stroke="#ccc" />

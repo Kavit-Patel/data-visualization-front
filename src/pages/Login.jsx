@@ -6,6 +6,7 @@ import { useQueryClient } from "react-query";
 import "./Login.css"; // Import the CSS file
 
 const Login = () => {
+  const urlParams = new URLSearchParams(window.location.search);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutateAsync: login, isLoading } = useLogin();
@@ -23,7 +24,7 @@ const Login = () => {
           queryClient.setQueryData("user", data);
         }
       },
-    }).then(() => navigate("/"));
+    }).then(() => navigate(`/?${urlParams}`));
   };
 
   return (

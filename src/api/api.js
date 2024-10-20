@@ -55,19 +55,13 @@ export const useLogin = () => {
 };
 export const useUserLogOut = () => {
   const queryClient = useQueryClient();
-  return (
-    useQuery < IUserResponse,
-    AxiosError >
-      (["userLogoutRes"],
-      () => api.get("/api/logoutUser"),
-      {
-        enabled: false,
-        refetchOnWindowFocus: false,
-        onSuccess: () => {
-          queryClient.invalidateQueries("user");
-          queryClient.setQueryData("user", undefined);
-          queryClient.invalidateQueries("user");
-        },
-      })
-  );
+  return useQuery(["userLogoutRes"], () => api.get("/api/logoutUser"), {
+    enabled: false,
+    refetchOnWindowFocus: false,
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+      queryClient.setQueryData("user", undefined);
+      queryClient.invalidateQueries("user");
+    },
+  });
 };

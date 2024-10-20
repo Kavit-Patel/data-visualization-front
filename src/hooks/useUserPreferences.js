@@ -5,14 +5,11 @@ import { formatDateForInput } from "../utility/formateDate";
 export const useFilterData = (data) => {
   const urlParams = new URLSearchParams(window.location.search);
 
-  // Helper function to get initial filter values
   const getInitialFilterValue = (param, cookieKey, defaultValue) => {
     const urlValue = urlParams.get(param);
     const cookieValue = Cookies.get(cookieKey);
     return urlValue || cookieValue || defaultValue;
   };
-
-  // Set initial values by checking URL params, then cookies, and fall back to 'all' or undefined for dates
   const [startDate, setStartDate] = useState(
     getInitialFilterValue("startDate", "startDate", undefined)
       ? new Date(getInitialFilterValue("startDate", "startDate", undefined))
@@ -36,7 +33,6 @@ export const useFilterData = (data) => {
     const startDateParam = urlParams.get("startDate");
     const endDateParam = urlParams.get("endDate");
 
-    // If URL params for date exist, update the states and set cookies
     if (startDateParam) {
       const startDateFromUrl = new Date(startDateParam);
       setStartDate(startDateFromUrl);
@@ -49,12 +45,10 @@ export const useFilterData = (data) => {
       Cookies.set("endDate", endDateParam, { expires: 7 });
     }
 
-    // Always update cookies when age or gender filters change
     Cookies.set("ageFilter", ageFilter, { expires: 7 });
     Cookies.set("genderFilter", genderFilter, { expires: 7 });
   }, [ageFilter, genderFilter]);
 
-  // Sync start and end date from data (only if cookies/URL are not set)
   useEffect(() => {
     if (
       data.length &&
@@ -68,11 +62,9 @@ export const useFilterData = (data) => {
     }
   }, [data]);
 
-  // Apply filters whenever filters or dates change
   useEffect(() => {
     let filtered = data;
 
-    // Apply date range filter if both start and end date are selected
     if (startDate && endDate) {
       filtered = filtered.filter((row) => {
         const date = new Date(formatDateForInput(row[0]));
@@ -80,12 +72,10 @@ export const useFilterData = (data) => {
       });
     }
 
-    // Apply age filter if selected
     if (ageFilter !== "all") {
       filtered = filtered.filter((row) => row[1] === ageFilter);
     }
 
-    // Apply gender filter if selected
     if (genderFilter !== "all") {
       filtered = filtered.filter((row) => row[2] === genderFilter);
     }
