@@ -1,0 +1,28 @@
+.filter-row {
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+  gap: 1rem; /* Equivalent to gap-4 */
+  margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-item label {
+  margin-bottom: 0.25rem; /* Equivalent to mb-1 */
+}
+
+.date-picker-wrapper {
+  display: flex;
+  gap: 0.5rem; /* Equivalent to gap-2 */
+}
+
+.input-field,
+.select-field {
+  border: 1px solid #ccc; /* Equivalent to border */
+  padding: 0.5rem; /* Equivalent to p-2 */
+  border-radius: 0.25rem; /* Optional for rounded input feel */
+}
