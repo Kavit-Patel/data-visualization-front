@@ -51,6 +51,11 @@ const Dashboard = () => {
         setData(result);
       } catch (error) {
         console.error("Error fetching data", error);
+      } finally {
+        const cached = localStorage.getItem("dvfirst");
+        if (!cached) {
+          localStorage.setItem("dvfirst", JSON.stringify("visited"));
+        }
       }
     };
 
