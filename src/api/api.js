@@ -12,7 +12,7 @@ const errorMessage = (err) => {
   if (err instanceof AxiosError && err.response) {
     const message = err.response.data?.message;
     return message instanceof Array
-      ? err.response.data?.message.json(", ")
+      ? message.join(", ")
       : message || "Something went wrong !";
   }
   if (err instanceof Error) {
